@@ -4,3 +4,7 @@ recursive-include openstack_auth/tests/templates *.html
 
 include LICENSE
 include README.rst
+
+include tox.ini
+include requirements.txt
+include test-requirements.txt
