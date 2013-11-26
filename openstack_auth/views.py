@@ -2,6 +2,7 @@ import logging
 
 from threading import Thread
 
+import django
 from django import shortcuts
 from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME
@@ -44,7 +45,14 @@ def login(request):
         initial.update({'region': requested_region})
 
     if request.method == "POST":
-        form = curry(Login, request)
+        # NOTE(saschpe): Since https://code.djangoproject.com/ticket/15198,
+        # the 'request' object is passed directly to AuthenticationForm in
+        # django.contrib.auth.views#login. The version check will break
+        # with Django-2.0
+        if django.VERSION[1] >= 6:
+            form = curry(Login)
+        else:
+            form = curry(Login, request)
     else:
         form = curry(Login, initial=initial)
 
